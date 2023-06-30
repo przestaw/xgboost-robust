@@ -1,3 +1,60 @@
+# Robust trees for XGBoost 1.7 (`tree_method="robust_exact"`)
+
+This repository is an updated implementation, by Przemysław Stawczyk, of
+[RobustTrees](https://github.com/chenhongge/RobustTrees) by Hongge Chen, Huan Zhang,
+Duane Boning and Cho-Jui Hsieh ("Robust Decision Trees Against Adversarial Examples",
+ICML 2019, [arXiv:1902.10660](https://arxiv.org/abs/1902.10660)).
+
+RobustTrees is a fork of XGBoost 0.72 (2018). This version moves its robust tree
+updater to the XGBoost 1.7 release line (tag `v1.7.6`), so it builds with current
+compilers and runs with Python 3.10/3.11:
+
+- `XGBClassifier(tree_method="robust_exact", robust_eps=...)` and the native
+  `xgb.train` interface keep the original names and defaults;
+- the robust updater is rewritten for the 1.7 internals and gave bit-identical
+  predictions and identical splits to RobustTrees in every tested case;
+- tests: `tests/python/test_robust_exact.py`.
+
+**Note:** the scikit-learn wrapper of XGBoost 1.7 has different default
+hyperparameters than 0.72 (`max_depth` 6 instead of 3, learning rate 0.3 instead
+of 0.1). Pass them explicitly to reproduce models trained with RobustTrees.
+
+This version was made so that the code of the author's MSc thesis on explanations
+of adversarially robust tree ensembles (Warsaw University of Technology, 2023) runs
+on current Python. All credit for the algorithm and the original code goes to their
+authors. XGBoost and RobustTrees are licensed under the Apache License 2.0 (see
+`LICENSE`); this version keeps that license.
+
+## Citation
+
+This is the same robust tree building logic as in RobustTrees, carried over to a
+newer XGBoost. If you use it, please cite the original work:
+
+H. Chen, H. Zhang, D. Boning, C.-J. Hsieh. Robust Decision Trees Against Adversarial
+Examples. ICML 2019, PMLR 97:1122-1131.
+<https://proceedings.mlr.press/v97/chen19m.html>
+
+```bibtex
+@inproceedings{chen2019robust,
+  title     = {Robust Decision Trees Against Adversarial Examples},
+  author    = {Chen, Hongge and Zhang, Huan and Boning, Duane and Hsieh, Cho-Jui},
+  booktitle = {Proceedings of the 36th International Conference on Machine Learning},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {97},
+  pages     = {1122--1131},
+  year      = {2019},
+  publisher = {PMLR}
+}
+```
+
+Build instructions, details and known limitations: [ROBUST_PORT.md](ROBUST_PORT.md).
+
+Branches: `robust-xgboost-1.7` (this version), `master` (RobustTrees, unchanged),
+`mirror-notes` (RobustTrees plus a description).
+
+The upstream XGBoost README follows.
+
+---
 <img src=https://raw.githubusercontent.com/dmlc/dmlc.github.io/master/img/logo-m/xgboost.png width=135/>  eXtreme Gradient Boosting
 ===========
 [![Build Status](https://xgboost-ci.net/job/xgboost/job/master/badge/icon)](https://xgboost-ci.net/blue/organizations/jenkins/xgboost/activity)
