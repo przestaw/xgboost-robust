@@ -34,7 +34,9 @@
 namespace xgboost {
 enum class TreeMethod : int {
   kAuto = 0, kApprox = 1, kExact = 2, kHist = 3,
-  kGPUHist = 5
+  kGPUHist = 5,
+  // robust exact greedy (RobustTrees, Chen et al. ICML 2019); 6 as in RobustTrees
+  kRobustExact = 6
 };
 
 // boosting process types
@@ -94,6 +96,7 @@ struct GBTreeTrainParam : public XGBoostParameter<GBTreeTrainParam> {
         .add_enum("exact",     TreeMethod::kExact)
         .add_enum("hist",      TreeMethod::kHist)
         .add_enum("gpu_hist",  TreeMethod::kGPUHist)
+        .add_enum("robust_exact", TreeMethod::kRobustExact)
         .describe("Choice of tree construction method.");
   }
 };

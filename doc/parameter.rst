@@ -131,7 +131,7 @@ Parameters for Tree Booster
   - The tree construction algorithm used in XGBoost. See description in the `reference paper <http://arxiv.org/abs/1603.02754>`_ and :doc:`treemethod`.
   - XGBoost supports  ``approx``, ``hist`` and ``gpu_hist`` for distributed training.  Experimental support for external memory is available for ``approx`` and ``gpu_hist``.
 
-  - Choices: ``auto``, ``exact``, ``approx``, ``hist``, ``gpu_hist``, this is a
+  - Choices: ``auto``, ``exact``, ``approx``, ``hist``, ``gpu_hist``, ``robust_exact``, this is a
     combination of commonly used updaters.  For other updaters like ``refresh``, set the
     parameter ``updater`` directly.
 
@@ -149,6 +149,10 @@ Parameters for Tree Booster
     - ``approx``: Approximate greedy algorithm using quantile sketch and gradient histogram.
     - ``hist``: Faster histogram optimized approximate greedy algorithm.
     - ``gpu_hist``: GPU implementation of ``hist`` algorithm.
+    - ``robust_exact``: Exact greedy algorithm with the robust split finding of
+      `Robust Decision Trees Against Adversarial Examples <https://arxiv.org/abs/1902.10660>`_
+      (port of `RobustTrees <https://github.com/chenhongge/RobustTrees>`_), CPU only.  See
+      ``ROBUST_PORT.md`` and the ``robust_eps`` parameter below.
 
 * ``scale_pos_weight`` [default=1]
 
@@ -159,6 +163,7 @@ Parameters for Tree Booster
   - A comma separated string defining the sequence of tree updaters to run, providing a modular way to construct and to modify the trees. This is an advanced parameter that is usually set automatically, depending on some other parameters. However, it could be also set explicitly by a user. The following updaters exist:
 
     - ``grow_colmaker``: non-distributed column-based construction of trees.
+    - ``robust_grow_colmaker``: ``grow_colmaker`` with robust split finding, used by ``robust_exact``.
     - ``grow_histmaker``: distributed tree construction with row-based data splitting based on global proposal of histogram counting.
     - ``grow_quantile_histmaker``: Grow tree using quantized histogram.
     - ``grow_gpu_hist``: Grow tree with GPU.
@@ -196,6 +201,19 @@ Parameters for Tree Booster
   - Only used if ``tree_method`` is set to ``hist``, ``approx`` or ``gpu_hist``.
   - Maximum number of discrete bins to bucket continuous features.
   - Increasing this number improves the optimality of splits at the cost of higher computation time.
+
+* ``robust_eps`` [default=0.3]
+
+  - Only used if ``tree_method`` is set to ``robust_exact``.
+  - Radius of the :math:`\ell_\infty` perturbation on each feature value considered by the
+    robust split finding. Each split candidate is scored by the worst case over moving the
+    points within ``robust_eps`` of the threshold to either side.
+  - range: [0,∞]
+
+* ``robust_training_verbose`` [default=0]
+
+  - Only used if ``tree_method`` is set to ``robust_exact``. Prints the robust split search
+    step by step (debugging only, very large output).
 
 * ``predictor``, [default= ``auto``]
 

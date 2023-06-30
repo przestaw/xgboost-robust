@@ -175,6 +175,9 @@ void GBTree::ConfigureUpdaters() {
     case TreeMethod::kExact:
       tparam_.updater_seq = "grow_colmaker,prune";
       break;
+    case TreeMethod::kRobustExact:
+      tparam_.updater_seq = "robust_grow_colmaker,prune";
+      break;
     case TreeMethod::kHist:
       LOG(INFO) <<
           "Tree method is selected to be 'hist', which uses a "
